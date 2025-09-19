@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星座运势三联画提示词生成器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            color: #1a2a6c;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(120deg, #1a2a6c, #b21f1f, #fdbb2d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 900px;
+            margin: 0 auto;
+            color: #555;
+        }
+        
+        .control-panel {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-group h3 {
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+            color: #1a2a6c;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        select, button {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #1a2a6c;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(120deg, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            box-shadow: 0 5px 12px rgba(26, 42, 108, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(26, 42, 108, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .copy-btn {
+            background: linear-gradient(120deg, #b21f1f, #fdbb2d);
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .result-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .constellation-badge {
+            background: linear-gradient(120deg, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .result-content {
+            flex-grow: 1;
+            padding: 15px;
+            background-color: #fff9f9;
+            border-radius: 10px;
+            border-left: 5px solid #b21f1f;
+            white-space: pre-line;
+            font-size: 15px;
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 500px;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            color: #555;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>星座运势三联画提示词生成器</h1>
+            <p class="description">一次性生成3张相关联的星座运势插画提示词，包含完整文案，每张图星座、祝福语和人物不同，姿势相似但不相同，背景和主体元素保持一致</p>
+        </header>
+        
+        <div class="control-panel">
+            <div class="control-group">
+                <h3>生成选项</h3>
+                <label for="theme">主题风格：</label>
+                <select id="theme">
+                    <option value="festive">喜庆节日</option>
+                    <option value="elegant">优雅奢华</option>
+                    <option value="modern">现代简约</option>
+                    <option value="fantasy">奇幻魔法</option>
+                    <option value="anime">动漫风格</option>
+                    <option value="healing">治愈温暖</option>
+                    <option value="hanfu">汉服风格</option>
+                </select>
+                
+                <label for="art-style">艺术风格：</label>
+                <select id="art-style">
+                    <option value="精致二次元">精致二次元</option>
+                    <option value="吉卜力工作室">吉卜力工作室</option>
+                    <option value="水彩艺术">水彩艺术</option>
+                    <option value="油画质感">油画质感</option>
+                    <option value="治愈插画">治愈插画</option>
+                    <option value="汉服插画">汉服插画</option>
+                </select>
+
+                <label for="text-style">文案风格：</label>
+                <select id="text-style">
+                    <option value="traditional">传统祝福</option>
+                    <option value="modern">现代励志</option>
+                    <option value="poetic">诗意表达</option>
+                    <option value="simple">简洁直接</option>
+                </select>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <h4 style="margin-bottom: 15px; color: #1a2a6c;">自定义星座（可选）</h4>
+                    <label for="constellation-input-1">第一张图星座：</label>
+                    <select id="constellation-input-1">
+                        <option value="">随机</option>
+                        <option value="白羊座">白羊座</option>
+                        <option value="金牛座">金牛座</option>
+                        <option value="双子座">双子座</option>
+                        <option value="巨蟹座">巨蟹座</option>
+                        <option value="狮子座">狮子座</option>
+                        <option value="处女座">处女座</option>
+                        <option value="天秤座">天秤座</option>
+                        <option value="天蝎座">天蝎座</option>
+                        <option value="射手座">射手座</option>
+                        <option value="摩羯座">摩羯座</option>
+                        <option value="水瓶座">水瓶座</option>
+                        <option value="双鱼座">双鱼座</option>
+                    </select>
+                    
+                    <label for="constellation-input-2">第二张图星座：</label>
+                    <select id="constellation-input-2">
+                        <option value="">随机</option>
+                        <option value="白羊座">白羊座</option>
+                        <option value="金牛座">金牛座</option>
+                        <option value="双子座">双子座</option>
+                        <option value="巨蟹座">巨蟹座</option>
+                        <option value="狮子座">狮子座</option>
+                        <option value="处女座">处女座</option>
+                        <option value="天秤座">天秤座</option>
+                        <option value="天蝎座">天蝎座</option>
+                        <option value="射手座">射手座</option>
+                        <option value="摩羯座">摩羯座</option>
+                        <option value="水瓶座">水瓶座</option>
+                        <option value="双鱼座">双鱼座</option>
+                    </select>
+                    
+                    <label for="constellation-input-3">第三张图星座：</label>
+                    <select id="constellation-input-3">
+                        <option value="">随机</option>
+                        <option value="白羊座">白羊座</option>
+                        <option value="金牛座">金牛座</option>
+                        <option value="双子座">双子座</option>
+                        <option value="巨蟹座">巨蟹座</option>
+                        <option value="狮子座">狮子座</option>
+                        <option value="处女座">处女座</option>
+                        <option value="天秤座">天秤座</option>
+                        <option value="天蝎座">天蝎座</option>
+                        <option value="射手座">射手座</option>
+                        <option value="摩羯座">摩羯座</option>
+                        <option value="水瓶座">水瓶座</option>
+                        <option value="双鱼座">双鱼座</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button id="generate-btn">生成三联画提示词</button>
+            <button id="copy-btn" class="copy-btn">复制所有提示词</button>
+        </div>
+        
+        <div class="results-container" id="results-container">
+            <div class="result-card">
+                <div class="result-header">
+                    <h3>第一张图</h3>
+                    <span class="constellation-badge" id="constellation-1">星座</span>
+                </div>
+                <div class="result-content" id="result-1">提示词将显示在这里...</div>
+            </div>
+            
+            <div class="result-card">
+                <div class="result-header">
+                    <h3>第二张图</h3>
+                    <span class="constellation-badge" id="constellation-2">星座</span>
+                </div>
+                <div class="result-content" id="result-2">提示词将显示在这里...</div>
+            </div>
+            
+            <div class="result-card">
+                <div class="result-header">
+                    <h3>第三张图</h3>
+                    <span class="constellation-badge" id="constellation-3">星座</span>
+                </div>
+                <div class="result-content" id="result-3">提示词将显示在这里...</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 星座运势三联画提示词生成器 | 专为生成相关联的三张星座运势插画设计</p>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">提示词已复制到剪贴板！</div>
+
+    <script>
+        // 配置数据
+        const config = {
+            // 星座数据
+            constellations: [
+                "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", 
+                "处女座", "天秤座", "天蝎座", "射手座", "摩羯座", "水瓶座", "双鱼座"
+            ],
+            
+            // 人物属性
+            genders: ["男性", "女性"],
+            
+            hairLengths: ["长", "中长", "短", "及肩"],
+            
+            hairStyles: ["大波浪卷发", "柔顺直发", "俏皮短发", "优雅盘发", "慵懒微卷", "高马尾", "编发发型","丸子头","双马尾","偏马尾","齐腰长发"],
+            
+            hairColors: ["铂金色", "浅金色", "深棕色", "黑色", "酒红色", "巧克力色", "亚麻色", "银灰色","黄色","橙色","粉色","棕色"],
+            
+            expressions: ["笑容灿烂愉悦", "自信微笑", "温柔浅笑", "开怀大笑", "神秘微笑", "俏皮眨眼"],
+            
+            // 姿势选项 - 相似但不相同的姿势组
+            poseGroups: [
+                [
+                    "优雅站立姿势，左手轻轻抬起",
+                    "优雅站立姿势，右手轻轻抬起",
+                    "优雅站立姿势，双手微微张开"
+                ],
+                [
+                    "微微侧身回眸，左手抚发",
+                    "微微侧身回眸，右手抚发",
+                    "微微侧身回眸，双手交叠胸前"
+                ],
+                [
+                    "自信叉腰姿势，身体微微左倾",
+                    "自信叉腰姿势，身体微微右倾",
+                    "自信叉腰姿势，身体笔直"
+                ],
+                [
+                    "舞蹈般动态姿势，左脚前踏",
+                    "舞蹈般动态姿势，右脚前踏",
+                    "舞蹈般动态姿势，双脚轻轻跳跃"
+                ],
+                [
+                    "伸手接住飘落花瓣的姿势",
+                    "闭眼感受微风的姿势",
+                    "温柔抚摸小动物的姿势",
+                    "温柔怀抱小动物的姿势"
+                ]
+            ],
+            
+            // 服装与配饰
+            outfitColors: ["红色", "深蓝色", "紫色", "金色", "黑色", "白色", "翡翠绿", "宝蓝色","黄色","橙色","粉色","棕色"],
+            
+            outfitStyles: ["抹胸长裙", "优雅西装", "传统服饰", "现代礼服", "奇幻服饰", "奢华长袍","汉服"],
+            
+            jewelryMaterials: ["金色", "银色", "玫瑰金", "铂金"],
+            
+            // 星座象征物
+            constellationSymbols: {
+                "白羊座": ["公羊角", "火焰", "冒险符号"],
+                "金牛座": ["金牛", "花卉", "宝石"],
+                "双子座": ["双胞胎", "书籍", "交流符号"],
+                "巨蟹座": ["螃蟹", "月亮", "贝壳"],
+                "狮子座": ["狮子", "太阳", "王冠"],
+                "处女座": ["麦穗", "书籍", "纯净符号"],
+                "天秤座": ["天秤", "正义符号", "羽毛"],
+                "天蝎座": ["蝎子", "神秘符号", "火焰"],
+                "射手座": ["弓箭", "箭靶", "旅行符号"],
+                "摩羯座": ["山羊", "山峰", "雄心符号"],
+                "水瓶座": ["水瓶", "水流", "科技符号"],
+                "双鱼座": ["双鱼", "波浪", "梦幻符号"]
+            },
+            
+            // 幸运道具选项（事业与财富融合）
+            luckyItems: ["镶嵌金币与上升箭头的事业财富双运杯", "绣有 \"财\" 字与职场元素的幸运披肩", "带有宝石与卷轴纹理的星座幸运盒", "装满金元宝的聚宝盆", "充满好运的锦鲤鱼缸"],
+            
+            // 背景与装饰
+            backgroundTextures: ["金色祥云", "星芒闪烁", "细微纹理", "流光效果", "几何图案", "星星","月亮"],
+            
+            decorativeElements: ["小星星", "灯笼", "花卉", "彩带", "光点", "魔法符文","金币","金元宝","喜鹊","爱心"],
+            
+            // 灯光效果
+            lighting: ["明亮影室光", "柔和自然光", "戏剧性聚光", "梦幻散射光"],
+
+            // 文案容器设计
+            textContainers: [
+                "优雅的卷轴式设计",
+                "精美的边框装饰",
+                "云朵形状的对话框",
+                "星辰环绕的文字框",
+                "花卉装饰的标题栏",
+                "丝绸质感的横幅"
+            ],
+
+            // 文案排版设计
+            textLayouts: [
+                "优雅的手写字体",
+                "分层错落有致的排版",
+                "四行交错排列",
+                "文字与装饰元素的协调组合",
+            ],
+
+            // 祝福文案库
+            blessings: {
+                career: {
+                    traditional: [
+                        "事业节节高",
+                        "前途步步升",
+                        "步步皆贵人",
+                        "职场一路顺",
+                        "才气满乾坤"
+                    ],
+                    modern: [
+                        "创新思维如泉涌",
+                        "事业路上遇贵人",
+                        "职场突破自我",
+                        "成就非凡价值",
+                        "每一个努力都算数",
+                        "坚持都有回响"
+                    ],
+                    poetic: [
+                        "梦想如星辰，指引前路",
+                        "努力如春风，滋养成长",
+                        "初心不忘，方得始终",
+                        "坚持所爱，终见花开",
+                        "智慧如光，照亮前程",
+                        "勇气如翼，助你飞翔"
+                    ],
+                    simple: [
+                        "事业顺利，升职加薪",
+                        "工作顺心，成果丰硕",
+                        "职业发展，前景光明"
+                    ]
+                },
+                wealth: {
+                    traditional: [
+                        "财运八方来",
+                        "钱袋装满怀",
+                        "财源滚滚如泉涌",
+                        "富贵吉祥暖四季",
+                        "理财有眼光，收获颇丰盈"
+                    ],
+                    modern: [
+                        "财富与幸福双丰收",
+                        "财富之路，越走越宽",
+                        "正财偏财皆旺",
+                        "理财有道生财"
+                    ],
+                    poetic: [
+                        "财富如流水，源源不断",
+                        "机遇如星辰，闪烁相伴",
+                        "节俭积累财富生",
+                        "智慧增值人",
+                        "财源如春水，不断涌动",
+                        "福气如阳光，温暖相随"
+                    ],
+                    simple: [
+                        "财运亨通，收入增长",
+                        "投资顺利，回报丰厚",
+                        "财富积累，经济自由"
+                    ]
+                },
+                love: {
+                    traditional: [
+                        "爱情甜如蜜，长伴常欢喜",
+                        "姻缘一线牵，此生共白头",
+                        "情感温暖如春",
+                        "家庭和谐美满"
+                    ],
+                    modern: [
+                        "遇见对的人，共同成长，彼此成就",
+                        "爱情如美酒，越陈越香",
+                        "关系如花园，绽放芬芳",
+                        "真诚相待，理解相守",
+                        "爱情如花般绽放"
+                    ],
+                    poetic: [
+                        "爱如月光，温柔相伴",
+                        "情如星辰，永恒闪烁",
+                        "在彼此的眼中看见星辰",
+                        "在相拥中感受永恒",
+                        "缘分如诗，缓缓书写",
+                        "爱情如歌，轻轻吟唱"
+                    ],
+                    simple: [
+                        "感情顺利，甜蜜幸福",
+                        "遇见真爱，关系和谐",
+                        "爱情美满，心灵相通"
+                    ]
+                },
+                life: {
+                    traditional: [
+                        "生活暖洋洋，财运常伴随",
+                        "健康平安伴，幸福每一天",
+                        "心想事皆成，万事皆如意"
+                    ],
+                    modern: [
+                        "平衡工作与生活，享受每一个当下",
+                        "快乐是阳光，生活充满芬芳",
+                        "简单中见丰盛，生活自有光彩"
+                    ],
+                    poetic: [
+                        "日常如诗，细微见美；生活如画，色彩纷呈",
+                        "感恩当下，期待明天，生活处处是礼物",
+                        "心若有光，生活便亮；心若有爱，世界便暖"
+                    ],
+                    simple: [
+                        "生活顺心，健康快乐",
+                        "好运常伴，心想事成",
+                       "平安喜乐，幸福美满"
+                    ]
+                }
+            }
+        };
+
+        // DOM元素
+        const result1Element = document.getElementById('result-1');
+        const result2Element = document.getElementById('result-2');
+        const result3Element = document.getElementById('result-3');
+        const constellation1Element = document.getElementById('constellation-1');
+        const constellation2Element = document.getElementById('constellation-2');
+        const constellation3Element = document.getElementById('constellation-3');
+        const generateBtn = document.getElementById('generate-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const themeSelect = document.getElementById('theme');
+        const artStyleSelect = document.getElementById('art-style');
+        const textStyleSelect = document.getElementById('text-style');
+        const constellationInput1 = document.getElementById('constellation-input-1');
+        const constellationInput2 = document.getElementById('constellation-input-2');
+        const constellationInput3 = document.getElementById('constellation-input-3');
+        const notification = document.getElementById('notification');
+
+        // 随机选择函数
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        // 获取不重复的随机星座
+        function getUniqueConstellations(count) {
+            const shuffled = [...config.constellations].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // 显示通知
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // 生成三联画提示词
+        function generateTriptychPrompts() {
+            // 获取用户输入的星座
+            const userConstellation1 = constellationInput1.value;
+            const userConstellation2 = constellationInput2.value;
+            const userConstellation3 = constellationInput3.value;
+            
+            // 选择星座 - 如果用户输入了星座则使用用户输入的，否则随机选择
+            let constellations = [];
+            
+            // 收集用户已选择的星座，避免重复
+            const userSelected = [];
+            if (userConstellation1) userSelected.push(userConstellation1);
+            if (userConstellation2 && !userSelected.includes(userConstellation2)) userSelected.push(userConstellation2);
+            if (userConstellation3 && !userSelected.includes(userConstellation3)) userSelected.push(userConstellation3);
+            
+            // 如果用户输入了至少一个星座，补充剩余的随机星座（确保不重复）
+            if (userSelected.length > 0) {
+                const remainingConstellations = config.constellations.filter(c => !userSelected.includes(c));
+                const randomConstellations = [];
+                
+                // 计算还需要多少随机星座
+                const neededCount = 3 - userSelected.length;
+                
+                // 从剩余星座中随机选择
+                for (let i = 0; i < neededCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * remainingConstellations.length);
+                    randomConstellations.push(remainingConstellations[randomIndex]);
+                    remainingConstellations.splice(randomIndex, 1);
+                }
+                
+                // 创建星座数组，保持用户输入的位置
+                constellations = [
+                    userConstellation1 || randomConstellations.shift(),
+                    userConstellation2 || randomConstellations.shift(),
+                    userConstellation3 || randomConstellations.shift()
+                ];
+            } else {
+                // 如果用户没有输入任何星座，则全部随机
+                constellations = getUniqueConstellations(3);
+            }
+            
+            // 选择艺术风格和主题
+            const artStyle = artStyleSelect.value;
+            const theme = themeSelect.value;
+            const textStyle = textStyleSelect.value;
+            
+            // 选择一组相似的姿势
+            const poseGroup = getRandomItem(config.poseGroups);
+            
+            // 选择统一的背景元素（确保三张图背景一致）
+            const outfitColor = getRandomItem(config.outfitColors);
+            const outfitStyle = getRandomItem(config.outfitStyles);
+            const jewelryMaterial = getRandomItem(config.jewelryMaterials);
+            const backgroundTexture = getRandomItem(config.backgroundTextures);
+            const decorativeElement = getRandomItem(config.decorativeElements);
+            const lighting = getRandomItem(config.lighting);
+            const luckyItem = getRandomItem(config.luckyItems);
+            const textContainer = getRandomItem(config.textContainers);
+            const textLayout = getRandomItem(config.textLayouts);
+            
+            // 生成三张图的提示词
+            const prompts = [];
+            
+            for (let i = 0; i < 3; i++) {
+                const constellation = constellations[i];
+                const pose = poseGroup[i];
+                
+                // 为每张图选择不同的人物特征
+                const gender = getRandomItem(config.genders);
+                const hairLength = getRandomItem(config.hairLengths);
+                const hairStyle = getRandomItem(config.hairStyles);
+                const hairColor = getRandomItem(config.hairColors);
+                const expression = getRandomItem(config.expressions);
+                const symbol = getRandomItem(config.constellationSymbols[constellation]);
+                
+                // 为每张图选择不同的祝福语
+                const careerBlessing = getRandomItem(config.blessings.career[textStyle]);
+                const wealthBlessing = getRandomItem(config.blessings.wealth[textStyle]);
+                const loveBlessing = getRandomItem(config.blessings.love[textStyle]);
+                const lifeBlessing = getRandomItem(config.blessings.life[textStyle]);
+                
+                // 构建提示词
+                const prompt = `${artStyle}风格${theme} 竖版插画，庆祝 ${constellation} 的运势。画面中心是一位${hairLength}${hairColor}${hairStyle}的${gender}。${pose}，面部${expression}，眼神充满喜悦。佩戴着${jewelryMaterial} 首饰，镶嵌着${symbol}图案（呼应星座主题）。身着${outfitColor}${outfitStyle}。背景是${outfitColor}带有${backgroundTexture} 图案，周围点缀着 ${decorativeElement} 装饰元素。${lighting}效果，在${luckyItem} 与首饰表面形成高光，增强奢华质感。顶部中央有${textContainer}，内写"${constellation}  " 字样。画面中间区域分布着${textLayout}的祝福文字：
+"${careerBlessing}"
+"${wealthBlessing}"
+"${loveBlessing}"
+"${lifeBlessing}"整体配色和谐喜庆，主要使用${outfitColor}和${jewelryMaterial} 色。氛围积极向上，所有元素协调一致地围绕 ${constellation} 主题。`; 
+
+                prompts.push({
+                    prompt,
+                    constellation
+                });
+            }
+            
+            return prompts;
+        }
+
+        // 显示提示词
+        function displayPrompts() {
+            const prompts = generateTriptychPrompts();
+            
+            // 更新第一张图
+            result1Element.textContent = prompts[0].prompt;
+            constellation1Element.textContent = prompts[0].constellation;
+            
+            // 更新第二张图
+            result2Element.textContent = prompts[1].prompt;
+            constellation2Element.textContent = prompts[1].constellation;
+            
+            // 更新第三张图
+            result3Element.textContent = prompts[2].prompt;
+            constellation3Element.textContent = prompts[2].constellation;
+            
+            showNotification('三联画提示词已生成！');
+        }
+
+        // 复制所有提示词到剪贴板
+        function copyAllToClipboard() {
+            let allText = "";
+            
+            allText += "=== 第一张图：" + constellation1Element.textContent + " ===\n\n";
+            allText += result1Element.textContent + "\n\n";
+            
+            allText += "=== 第二张图：" + constellation2Element.textContent + " ===\n\n";
+            allText += result2Element.textContent + "\n\n";
+            
+            allText += "=== 第三张图：" + constellation3Element.textContent + " ===\n\n";
+            allText += result3Element.textContent;
+            
+            navigator.clipboard.writeText(allText).then(() => {
+                showNotification('所有提示词已复制到剪贴板！');
+            }).catch(err => {
+                console.error('无法复制文本: ', err);
+                showNotification('复制失败，请手动复制');
+            });
+        }
+
+        // 初始化事件监听
+        function initEventListeners() {
+            generateBtn.addEventListener('click', displayPrompts);
+            copyBtn.addEventListener('click', copyAllToClipboard);
+        }
+
+        // 初始化应用
+        function initApp() {
+            initEventListeners();
+            displayPrompts(); // 初始生成一次
+        }
+
+        // 启动应用
+        initApp();
+    </script>
+</body>
+</html>
