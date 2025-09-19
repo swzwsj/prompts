@@ -1,0 +1,10 @@
+{artStyle}风格{theme}竖版插画（{aspectRatio}画面比例），庆祝{constellationName}的运势。
+画面主体：站在{sceneCarrier}上（呼应{coreTheme}），中心是一位{hairLength}{hairColor}{hairstyle}的{gender}。{pose}，面部{expression}，眼神{eyeDescription}。佩戴{jewelryMaterial}材质首饰（镶嵌{constellationSymbol}图案，呼应星座主题），身着{clothingMaterial}材质的{clothingColor}{clothingStyle}。一只手拿着{careerProp}（象征事业成就），另一只手拿着{wealthProp}（象征财富丰盛），指尖自然飘落{featureElement}（呼应{coreTheme}）。
+视觉化祝福元素：人物周围环绕对应祝福的视觉符号——事业祝福语旁点缀{careerVisualSymbol}，财富祝福语旁点缀{wealthVisualSymbol}，爱情祝福语旁点缀{loveVisualSymbol}，生活祝福语旁点缀{lifeVisualSymbol}，符号与文字错落分布，增强画面灵动感。
+背景与光效：背景为{backgroundColor}渐变，带有{backgroundTexture}纹理（如星芒、水波纹、云絮），周围点缀{decorativeElement}装饰。{lightingEffect}效果，在{careerProp}、{wealthProp}、首饰及{sceneCarrier}边缘形成细腻高光，金属/水晶材质呈现{textureDetail}（如磨砂反光、通透折射），强化奢华质感。
+文字与配色：顶部中央有{textBorderStyle}边框内的粗体"{constellationName}"文字；画面中间区域围绕人物分布四行带{textOutlineStyle}轮廓的祝福文字：
+"{careerBlessing}"
+"{wealthBlessing}"
+"{loveBlessing}"
+"{lifeBlessing}"。
+整体配色{colorMatchingDesc}，以{mainColor}为主调，{auxiliaryColor}为点缀色，氛围{atmosphereDesc}，所有元素协调围绕{constellationName}主题。

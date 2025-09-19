@@ -1,0 +1,16 @@
+一、基础设定（批量通用，风格统一）
+{artStyle}风格竖版插画（{aspectRatio}画面比例，8K分辨率，超高清细节，人物面部精致无模糊），整体氛围{atmosphereDesc}。
+
+1. 通用姿势框架：均为{generalPose}（核心动作含“手持{careerProp}+{wealthProp}”，身体姿态统一，仅手部角度/身体倾斜度微调）。
+2. 通用视觉元素：
+- 首饰：{jewelryMaterial}材质，镶嵌对应星座符号，仅款式随人物调整；
+- 服装：{clothingMaterial}材质的{clothingColor}{clothingStyle}，仅细节随人物调整；
+- 背景与光影：{backgroundColor}渐变（简化纹理：{simpleBackgroundTexture}），点缀{simpleDecorativeElement}；{lightingEffect}效果，在道具、首饰边缘形成细腻高光，材质呈现{textureDetail}；
+- 文字排版：顶部中央{textBorderStyle}边框+粗体“{constellationName}”；中间围绕人物分布四行带{textOutlineStyle}轮廓的祝福文字，与视觉符号错落排列。
+
+二、分图可变信息（单图差异化）
+每张图仅替换以下变量，其余沿用基础设定：
+1. 人物形象：{hairLength}{hairColor}{hairstyle}的{gender}，服装细节（如立领/收腰/暗纹）、首饰款式（如锁骨链/手镯/长项链）；
+2. 姿势微调：{poseAdjust}（如“持事业道具手抬肩高”“持财富道具手搭腰间”）；
+3. 星座与祝福：{constellationName}，四行祝福文字（{careerBlessing}、{wealthBlessing}、{loveBlessing}、{lifeBlessing}）；
+4. 视觉符号：事业祝福旁{careerVisualSymbol}、财富祝福旁{wealthVisualSymbol}、爱情祝福旁{loveVisualSymbol}、生活祝福旁{lifeVisualSymbol}。

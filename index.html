@@ -407,12 +407,47 @@
             luckyItems: ["镶嵌金币与上升箭头的事业财富双运杯", "绣有 \"财\" 字与职场元素的幸运披肩", "带有宝石与卷轴纹理的星座幸运盒", "装满金元宝的聚宝盆", "充满好运的锦鲤鱼缸"],
             
             // 背景与装饰
-            backgroundTextures: ["金色祥云", "星芒闪烁", "细微纹理", "流光效果", "几何图案", "星星","月亮"],
+            backgroundTextures: ["金色祥云", "星芒闪烁", "细微纹理", "流光效果", "几何图案", "星星", "月亮", "水波纹涟漪", "云絮渐变", "几何暗纹", "星座连线"],
             
-            decorativeElements: ["小星星", "灯笼", "花卉", "彩带", "光点", "魔法符文","金币","金元宝","喜鹊","爱心"],
+            decorativeElements: ["小星星", "灯笼", "花卉", "彩带", "光点", "魔法符文", "金币", "金元宝", "喜鹊", "爱心"],
             
             // 灯光效果
             lighting: ["明亮影室光", "柔和自然光", "戏剧性聚光", "梦幻散射光"],
+            
+            // 场景载体 - 新增
+            sceneCarriers: ["发光的事业财富双运平台", "桃花环绕的好运云朵", "星芒铺就的星座阶梯", "金币堆砌的幸运基座"],
+            
+            // 视觉符号 - 新增
+            careerVisualSymbols: ["金色齿轮", "发光合同", "上升箭头", "迷你奖杯"],
+            wealthVisualSymbols: ["金币雨", "元宝剪影", "水晶钱袋", "发光钻石"],
+            loveVisualSymbols: ["粉桃心", "连理枝", "爱心气球", "樱花花瓣"],
+            lifeVisualSymbols: ["暖黄小太阳", "绿植叶片", "微笑云朵", "彩虹碎片"],
+            
+            // 材质 - 新增
+            clothingMaterials: ["黑色缎面", "金色亮片", "藏青丝绒", "白色雪纺", "灰色亚麻"],
+            jewelryMaterials: ["冷金色磨砂", "银色水晶镶嵌", "玫瑰金亮面", "铂金拉丝"],
+            
+            // 光效类型 - 新增
+            lightingEffects: ["明亮影室光", "柔和柔光", "侧逆光", "漫反射光"],
+            
+            // 材质细节描述 - 新增
+            textureDetails: ["冷金磨砂的细腻颗粒感", "水晶的通透折射光斑", "缎面的柔和反光", "亮片的闪烁星点"],
+            
+            // 文字样式 - 新增
+            textBorderStyles: ["皇冠状金边", "水晶镶嵌", "藤蔓缠绕", "齿轮机械风"],
+            textOutlineStyles: ["金色细边", "银色渐变", "彩色描边", "光晕轮廓"],
+            
+            // 其他新增元素
+            coreThemes: ["事业财富双运", "爱情美满", "生活幸福", "星座运势"],
+            eyeDescriptions: ["充满喜悦", "温柔如水", "明亮有神", "梦幻灵动"],
+            careerProps: ["成功卷轴", "金色公文包", "奖杯", "上升箭头"],
+            wealthProps: ["金元宝", "水晶钱袋", "金币", "财宝箱"],
+            featureElements: ["金色星光", "粉色花瓣", "幸运符文", "财富光芒"],
+            backgroundColors: ["梦幻紫", "幸运金", "温柔粉", "深邃蓝"],
+            colorMatchingDescs: ["和谐统一", "对比鲜明", "渐变过渡", "经典优雅"],
+            mainColors: ["金色", "紫色", "粉色", "蓝色"],
+            auxiliaryColors: ["银色", "白色", "红色", "绿色"],
+            atmosphereDescs: ["积极向上", "梦幻浪漫", "高贵典雅", "温馨舒适"],
 
             // 文案容器设计
             textContainers: [
@@ -431,11 +466,19 @@
                 "四行交错排列",
                 "文字与装饰元素的协调组合",
             ],
+            
+            // 新添加的变量
+            aspectRatio: "9:16",
+            uniquePoses: ["正面微抬事业道具+财富道具自然下垂", "侧身持双道具+身体轻靠道具", "半转身抬手展示事业道具+另手持财富道具", "正面双手持道具于腹前+身体微前倾"],
+            femaleClothing: ["黑色缎面橙色西装", "白色雪纺粉色连衣裙", "藏青丝绒蓝色旗袍", "浅灰亚麻紫色衬衫+半身裙", "金色亮片红色吊带裙"],
+            maleClothing: ["黑色缎面橙色西装", "灰色亚麻深蓝色衬衫+阔腿裤", "藏青色西装料黑色西装", "卡其色棉麻棕色夹克+休闲裤", "银色亮面灰色卫衣+工装裤"],
+            simpleBackgroundTextures: ["极细星星点", "淡色渐变晕染", "极简星座符号", "浅灰几何暗纹"],
+            simpleDecorativeElements: ["3-5条细彩带", "稀疏迷你光粒", "单种少量花瓣", "极简几何碎片"],
 
             // 祝福文案库 - 将从blessing.json加载
             blessings: {}
         };
-        };
+        
 
         // DOM元素
         const result1Element = document.getElementById('result-1');
@@ -534,12 +577,26 @@
             const textContainer = getRandomItem(config.textContainers);
             const textLayout = getRandomItem(config.textLayouts);
             
+            // 统一选择通用视觉元素（确保同一批生成的三张图使用相同的元素）
+            const aspectRatio = config.aspectRatio;
+            const careerProp = getRandomItem(config.careerProps);
+            const wealthProp = getRandomItem(config.wealthProps);
+            const backgroundColor = getRandomItem(config.backgroundColors);
+            const simpleBackgroundTexture = getRandomItem(config.simpleBackgroundTextures);
+            const simpleDecorativeElement = getRandomItem(config.simpleDecorativeElements);
+            const lightingEffect = getRandomItem(config.lightingEffects);
+            const textureDetail = getRandomItem(config.textureDetails);
+            const textBorderStyle = getRandomItem(config.textBorderStyles);
+            const textOutlineStyle = getRandomItem(config.textOutlineStyles);
+            const atmosphereDesc = getRandomItem(config.atmosphereDescs);
+            
             // 生成三张图的提示词
             const prompts = [];
             
             for (let i = 0; i < 3; i++) {
                 const constellation = constellations[i];
                 const pose = poseGroup[i];
+                const constellationName = constellation;
                 
                 // 为每张图选择不同的人物特征
                 const gender = getRandomItem(config.genders);
@@ -555,12 +612,30 @@
                 const loveBlessing = getRandomItem(config.blessings.love);
                 const lifeBlessing = getRandomItem(config.blessings.life);
                 
-                // 构建提示词
-                const prompt = `${artStyle}风格${theme} 竖版插画，庆祝 ${constellation} 的运势。画面中心是一位${hairLength}${hairColor}${hairStyle}的${gender}。${pose}，面部${expression}，眼神充满喜悦。佩戴着${jewelryMaterial} 首饰，镶嵌着${symbol}图案（呼应星座主题）。身着${outfitColor}${outfitStyle}。背景是${outfitColor}带有${backgroundTexture} 图案，周围点缀着 ${decorativeElement} 装饰元素。${lighting}效果，在${luckyItem} 与首饰表面形成高光，增强奢华质感。顶部中央有${textContainer}，内写"${constellation}  " 字样。画面中间区域分布着${textLayout}的祝福文字：
-"${careerBlessing}"
-"${wealthBlessing}"
-"${loveBlessing}"
-"${lifeBlessing}"整体配色和谐喜庆，主要使用${outfitColor}和${jewelryMaterial} 色。氛围积极向上，所有元素协调一致地围绕 ${constellation} 主题。`; 
+                // 为每张图选择不同的视觉符号和特征
+                const careerVisualSymbol = getRandomItem(config.careerVisualSymbols);
+                const wealthVisualSymbol = getRandomItem(config.wealthVisualSymbols);
+                const loveVisualSymbol = getRandomItem(config.loveVisualSymbols);
+                const lifeVisualSymbol = getRandomItem(config.lifeVisualSymbols);
+                const uniquePose = getRandomItem(config.uniquePoses);
+                
+
+                
+                // 按性别选择服装
+                let genderClothing = '';
+                if (gender === '女性') {
+                    genderClothing = getRandomItem(config.femaleClothing);
+                } else if (gender === '男性') {
+                    genderClothing = getRandomItem(config.maleClothing);
+                } else {
+                    // 中性形象可选任意一套
+                    genderClothing = Math.random() > 0.5 ? 
+                        getRandomItem(config.femaleClothing) : 
+                        getRandomItem(config.maleClothing);
+                }
+                
+                // 构建提示词 - 使用prompts2.txt的格式
+                const prompt = `${artStyle}风格竖版插画（${aspectRatio}画面比例，8K分辨率，超高清细节，人物面部精致无模糊），整体氛围${atmosphereDesc}，主视觉聚焦人物与文字。\n\n1. 通用视觉元素：\n- 首饰：${jewelryMaterial}材质，镶嵌对应星座符号，仅款式随人物调整；\n- 手持道具：核心动作含"手持${careerProp}+${wealthProp}"，道具造型统一；\n- 背景与光影：${backgroundColor}极简渐变（简化纹理：${simpleBackgroundTexture}，仅保留1种低存在感纹理），点缀${simpleDecorativeElement}（数量控制在1-2种，避免分散视觉）；${lightingEffect}效果，重点在道具、首饰边缘形成细腻高光，材质呈现${textureDetail}；\n- 文字排版：顶部中央${textBorderStyle}边框内的"${constellationName}"；中间围绕人物分布四行祝福文字（内容为"${careerBlessing}""${wealthBlessing}""${loveBlessing}""${lifeBlessing}"），横向排列，每行一句，依次相对于人物偏右、偏左、偏右、偏左交错，与视觉符号错落排列（符号数量精简，每类祝福仅配1个）。\n二、分图可变信息（单图差异化）\n每张图仅替换以下变量，其余沿用基础设定：\n1. 人物形象：${hairLength}${hairColor}${hairStyle}的${gender}，服装：${genderClothing}（含材质+颜色+款式），服装细节（如立领/收腰/暗纹）、首饰款式（如锁骨链/手镯/长项链）；\n2. 完整姿势：${uniquePose}（每张图采用不同姿势，需包含"手持双道具"核心动作，整体自然舒展，避免夸张）；\n3. 星座与祝福：${constellationName}，四行祝福文字（"${careerBlessing}""${wealthBlessing}""${loveBlessing}""${lifeBlessing}"）。`; 
 
                 prompts.push({
                     prompt,
