@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提示词生成器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>一键生成3张图片提示词</h1>
+        
+        <div class="options">
+            <div class="random-info">
+                <p>系统将自动为您随机生成性别和星座</p>
+            </div>
+        </div>
+        
+        <button id="generateBtn">生成提示词</button>
+        <button id="copyAllBtn">一键复制所有提示词</button>
+        
+        <div class="results">
+            <div class="prompt-box">
+                <h3>提示词1</h3>
+                <textarea id="prompt1" rows="10" readonly></textarea>
+                <button class="copy-btn" data-target="prompt1">复制</button>
+            </div>
+            
+            <div class="prompt-box">
+                <h3>提示词2</h3>
+                <textarea id="prompt2" rows="10" readonly></textarea>
+                <button class="copy-btn" data-target="prompt2">复制</button>
+            </div>
+            
+            <div class="prompt-box">
+                <h3>提示词3</h3>
+                <textarea id="prompt3" rows="10" readonly></textarea>
+                <button class="copy-btn" data-target="prompt3">复制</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

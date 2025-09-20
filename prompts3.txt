@@ -1,0 +1,8 @@
+基础风格与画质：动漫风格插画,比例9：16，极致细节，平滑 shading，色彩鲜艳且带有写实质感。
+核心角色设定：【constellationName】主题【gender】角色，【hairStyle】，【facialExpressions】，【handGestures】，【handDetails】；佩戴【specificAccessoryCombinations】。
+角色服饰：身着【clothingStyles】。
+环境元素：周围【itemStatesAndDetails】。
+整体氛围与光影：整体氛围【coreAtmosphereWords】，柔和暖光【lightAndShadowEffects】，画面【finalVisualEffects】。
+
+添加文字1：顶部居中白底白色边框内的黑色粗体文字“{constellationName}”；
+添加文字2：从人物中间开始分布四行白色粗体祝福文字（内容为“{careerBlessing}”,“{wealthBlessing}”,“{loveBlessing}”,“{lifeBlessing}”），横向排列，每行一句，依次相对于人物偏右、偏左、偏右、偏左交错，与视觉符号错落排列（符号数量精简，每类祝福仅配1个）。
